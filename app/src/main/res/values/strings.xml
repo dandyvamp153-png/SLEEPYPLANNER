@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">메모장</string>
+    <!-- Stealth: App name shows as "메모장" (Notepad) in launcher -->
+
+    <string name="real_app_name">CrossLine</string>
+    <string name="session_diet">다이어트</string>
+    <string name="session_money_track">머니트랙</string>
+    <string name="session_pickup">픽업</string>
+    <string name="dummy_memo_title">메모</string>
+    <string name="dummy_memo_hint">여기에 메모를 입력하세요...</string>
+</resources>
