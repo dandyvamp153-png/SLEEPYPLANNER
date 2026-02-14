@@ -6,6 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.crossline.app.ui.ai.AiAssistantViewModel
 import com.crossline.app.ui.dashboard.DashboardScreen
 import com.crossline.app.ui.diet.BodyCheckScreen
 import com.crossline.app.ui.diet.DietScreen
@@ -47,6 +48,7 @@ fun CrossLineNavHost(
     onEmergencySwitchReady: ((() -> Unit) -> Unit)? = null
 ) {
     val navController = rememberNavController()
+    val aiViewModel = hiltViewModel<AiAssistantViewModel>()
 
     // Register emergency switch: flip phone -> jump to MoneyTrack
     LaunchedEffect(Unit) {
@@ -67,7 +69,8 @@ fun CrossLineNavHost(
             DashboardScreen(
                 onNavigateToDiet = { navController.navigate(Routes.DIET) },
                 onNavigateToMoneyTrack = { navController.navigate(Routes.MONEY_TRACK) },
-                onNavigateToPickup = { navController.navigate(Routes.PICKUP) }
+                onNavigateToPickup = { navController.navigate(Routes.PICKUP) },
+                aiViewModel = aiViewModel
             )
         }
 
@@ -77,7 +80,8 @@ fun CrossLineNavHost(
                 onBack = { navController.popBackStack() },
                 onNavigateToMealLog = { navController.navigate(Routes.DIET_MEAL_LOG) },
                 onNavigateToPivotCamera = { navController.navigate(Routes.DIET_PIVOT_CAMERA) },
-                onNavigateToBodyCheck = { navController.navigate(Routes.DIET_BODY_CHECK) }
+                onNavigateToBodyCheck = { navController.navigate(Routes.DIET_BODY_CHECK) },
+                aiViewModel = aiViewModel
             )
         }
         composable(Routes.DIET_MEAL_LOG) {
@@ -98,7 +102,8 @@ fun CrossLineNavHost(
                 onBack = { navController.popBackStack() },
                 onNavigateToStudy = { navController.navigate(Routes.MONEY_TRACK_STUDY) },
                 onNavigateToAiBusiness = { navController.navigate(Routes.MONEY_TRACK_AI_BUSINESS) },
-                onNavigateToInvestment = { navController.navigate(Routes.MONEY_TRACK_INVESTMENT) }
+                onNavigateToInvestment = { navController.navigate(Routes.MONEY_TRACK_INVESTMENT) },
+                aiViewModel = aiViewModel
             )
         }
         composable(Routes.MONEY_TRACK_STUDY) {

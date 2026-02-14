@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.crossline.app.ui.ai.AiAssistantViewModel
+import com.crossline.app.ui.ai.AiFloatingButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,9 +40,13 @@ fun DietScreen(
     onBack: () -> Unit,
     onNavigateToMealLog: () -> Unit,
     onNavigateToPivotCamera: () -> Unit,
-    onNavigateToBodyCheck: () -> Unit
+    onNavigateToBodyCheck: () -> Unit,
+    aiViewModel: AiAssistantViewModel? = null
 ) {
     Scaffold(
+        floatingActionButton = {
+            aiViewModel?.let { AiFloatingButton(viewModel = it) }
+        },
         topBar = {
             TopAppBar(
                 title = { Text("다이어트", fontWeight = FontWeight.Bold) },

@@ -28,15 +28,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.crossline.app.ui.ai.AiAssistantViewModel
+import com.crossline.app.ui.ai.AiFloatingButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     onNavigateToDiet: () -> Unit,
     onNavigateToMoneyTrack: () -> Unit,
-    onNavigateToPickup: () -> Unit
+    onNavigateToPickup: () -> Unit,
+    aiViewModel: AiAssistantViewModel? = null
 ) {
     Scaffold(
+        floatingActionButton = {
+            aiViewModel?.let { AiFloatingButton(viewModel = it) }
+        },
         topBar = {
             TopAppBar(
                 title = {
@@ -86,18 +92,6 @@ fun DashboardScreen(
             )
 
             Spacer(modifier = Modifier.weight(1f))
-
-            // AI Assistant floating area placeholder
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = "AI 비서",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f)
-                )
-            }
         }
     }
 }

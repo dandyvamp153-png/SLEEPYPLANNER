@@ -31,6 +31,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.crossline.app.ui.ai.AiAssistantViewModel
+import com.crossline.app.ui.ai.AiFloatingButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,9 +40,13 @@ fun MoneyTrackScreen(
     onBack: () -> Unit,
     onNavigateToStudy: () -> Unit,
     onNavigateToAiBusiness: () -> Unit,
-    onNavigateToInvestment: () -> Unit
+    onNavigateToInvestment: () -> Unit,
+    aiViewModel: AiAssistantViewModel? = null
 ) {
     Scaffold(
+        floatingActionButton = {
+            aiViewModel?.let { AiFloatingButton(viewModel = it) }
+        },
         topBar = {
             TopAppBar(
                 title = { Text("머니트랙", fontWeight = FontWeight.Bold) },
