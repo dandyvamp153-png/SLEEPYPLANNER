@@ -1,5 +1,6 @@
 package com.crossline.app.ui.diet
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.MonitorWeight
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.Card
@@ -32,7 +34,12 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DietScreen(onBack: () -> Unit) {
+fun DietScreen(
+    onBack: () -> Unit,
+    onNavigateToMealLog: () -> Unit,
+    onNavigateToPivotCamera: () -> Unit,
+    onNavigateToBodyCheck: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,19 +71,22 @@ fun DietScreen(onBack: () -> Unit) {
             DietMenuCard(
                 title = "식단 기록",
                 subtitle = "Good/Bad 상태 및 사진 분석",
-                icon = Icons.Default.Restaurant
+                icon = Icons.Default.Restaurant,
+                onClick = onNavigateToMealLog
             )
 
             DietMenuCard(
                 title = "눈바디 카메라",
                 subtitle = "기준선 가이드 + 이전 사진 오버레이",
-                icon = Icons.Default.CameraAlt
+                icon = Icons.Default.CameraAlt,
+                onClick = onNavigateToPivotCamera
             )
 
             DietMenuCard(
                 title = "인바디 / 컨디션",
                 subtitle = "체성분 기록 및 컨디션 점수 (1-5)",
-                icon = Icons.Default.MonitorWeight
+                icon = Icons.Default.MonitorWeight,
+                onClick = onNavigateToBodyCheck
             )
         }
     }
@@ -86,10 +96,11 @@ fun DietScreen(onBack: () -> Unit) {
 private fun DietMenuCard(
     title: String,
     subtitle: String,
-    icon: ImageVector
+    icon: ImageVector,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -107,7 +118,7 @@ private fun DietMenuCard(
                 contentDescription = title,
                 tint = MaterialTheme.colorScheme.primary
             )
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(text = title, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
@@ -116,6 +127,11 @@ private fun DietMenuCard(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             }
+            Icon(
+                Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+            )
         }
     }
 }
