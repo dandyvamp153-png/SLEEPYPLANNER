@@ -1,5 +1,6 @@
 package com.crossline.app.ui.moneytrack
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.ShowChart
@@ -32,7 +34,12 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MoneyTrackScreen(onBack: () -> Unit) {
+fun MoneyTrackScreen(
+    onBack: () -> Unit,
+    onNavigateToStudy: () -> Unit,
+    onNavigateToAiBusiness: () -> Unit,
+    onNavigateToInvestment: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -64,19 +71,22 @@ fun MoneyTrackScreen(onBack: () -> Unit) {
             TrackCard(
                 title = "학습",
                 subtitle = "산업안전기사 기출 회독 & 학습 아카이브",
-                icon = Icons.Default.School
+                icon = Icons.Default.School,
+                onClick = onNavigateToStudy
             )
 
             TrackCard(
                 title = "AI 창업",
                 subtitle = "프로젝트별 7대 실무 탭 관리",
-                icon = Icons.Default.Lightbulb
+                icon = Icons.Default.Lightbulb,
+                onClick = onNavigateToAiBusiness
             )
 
             TrackCard(
                 title = "투자",
                 subtitle = "자동화 프로그램 개발 로그 & 히스토리",
-                icon = Icons.Default.ShowChart
+                icon = Icons.Default.ShowChart,
+                onClick = onNavigateToInvestment
             )
         }
     }
@@ -86,10 +96,11 @@ fun MoneyTrackScreen(onBack: () -> Unit) {
 private fun TrackCard(
     title: String,
     subtitle: String,
-    icon: ImageVector
+    icon: ImageVector,
+    onClick: () -> Unit
 ) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -107,7 +118,7 @@ private fun TrackCard(
                 contentDescription = title,
                 tint = MaterialTheme.colorScheme.secondary
             )
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(text = title, style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(
@@ -116,6 +127,11 @@ private fun TrackCard(
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                 )
             }
+            Icon(
+                Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.3f)
+            )
         }
     }
 }
