@@ -1,6 +1,7 @@
 package com.crossline.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,7 +19,10 @@ import com.crossline.app.ui.moneytrack.investment.InvestmentScreen
 import com.crossline.app.ui.moneytrack.investment.InvestmentViewModel
 import com.crossline.app.ui.moneytrack.study.StudyScreen
 import com.crossline.app.ui.moneytrack.study.StudyViewModel
+import com.crossline.app.ui.pickup.PickupRecordListScreen
 import com.crossline.app.ui.pickup.PickupScreen
+import com.crossline.app.ui.pickup.PickupViewModel
+import com.crossline.app.ui.pickup.SilentCameraScreen
 
 object Routes {
     const val DASHBOARD = "dashboard"
@@ -34,11 +38,26 @@ object Routes {
     const val MONEY_TRACK_INVESTMENT = "money_track/investment"
     // Pickup
     const val PICKUP = "pickup"
+    const val PICKUP_CAMERA = "pickup/camera"
+    const val PICKUP_RECORDS = "pickup/records"
 }
 
 @Composable
-fun CrossLineNavHost() {
+fun CrossLineNavHost(
+    onEmergencySwitchReady: ((() -> Unit) -> Unit)? = null
+) {
     val navController = rememberNavController()
+
+    // Register emergency switch: flip phone -> jump to MoneyTrack
+    LaunchedEffect(Unit) {
+        onEmergencySwitchReady?.invoke {
+            // Clear backstack and navigate to MoneyTrack (stealth)
+            navController.navigate(Routes.MONEY_TRACK) {
+                popUpTo(Routes.DASHBOARD) { inclusive = false }
+                launchSingleTop = true
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -95,9 +114,28 @@ fun CrossLineNavHost() {
             InvestmentScreen(viewModel = viewModel, onBack = { navController.popBackStack() })
         }
 
-        // Pickup session
+        // Pickup session (encrypted, AI-isolated)
         composable(Routes.PICKUP) {
-            PickupScreen(onBack = { navController.popBackStack() })
+            val viewModel = hiltViewModel<PickupViewModel>()
+            PickupScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onNavigateToCamera = { navController.navigate(Routes.PICKUP_CAMERA) },
+                onNavigateToRecords = { navController.navigate(Routes.PICKUP_RECORDS) }
+            )
+        }
+        composable(Routes.PICKUP_CAMERA) {
+            SilentCameraScreen(
+                onBack = { navController.popBackStack() },
+                onPhotoTaken = { /* Wire to PickupViewModel when CameraX capture is ready */ }
+            )
+        }
+        composable(Routes.PICKUP_RECORDS) {
+            val viewModel = hiltViewModel<PickupViewModel>()
+            PickupRecordListScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() }
+            )
         }
     }
 }

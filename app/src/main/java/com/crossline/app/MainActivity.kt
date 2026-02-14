@@ -8,13 +8,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import com.crossline.app.ui.dashboard.DashboardScreen
 import com.crossline.app.ui.dashboard.DummyMemoScreen
 import com.crossline.app.ui.theme.CrossLineTheme
+import com.crossline.app.util.FlipDetector
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private var flipDetector: FlipDetector? = null
+    private var emergencySwitch: (() -> Unit)? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,7 +27,11 @@ class MainActivity : ComponentActivity() {
                 var unlocked by rememberSaveable { mutableStateOf(false) }
 
                 if (unlocked) {
-                    CrossLineNavHost()
+                    CrossLineNavHost(
+                        onEmergencySwitchReady = { callback ->
+                            emergencySwitch = callback
+                        }
+                    )
                 } else {
                     DummyMemoScreen(
                         onSecretGesture = { unlocked = true }
@@ -31,5 +39,20 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        // Initialize flip detector for emergency switch
+        flipDetector = FlipDetector(this) {
+            emergencySwitch?.invoke()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        flipDetector?.start()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        flipDetector?.stop()
     }
 }
